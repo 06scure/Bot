@@ -1,0 +1,10 @@
+{
+  "model": "models/yolov8n_person.rknn",
+  "input_size": 416,
+  "precision": "int8",
+  "roi": [0.15, 0.25, 0.85, 0.95],
+  "min_score": 0.60,
+  "min_consecutive_frames": 5,
+  "absence_reset_ms": 1000,
+  "cooldown_ms": 600000
+}

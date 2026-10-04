@@ -13,7 +13,7 @@ struct Frame {
 };
 class Camera {
 public:
-    Camera(const std::string& device, int width, int height, int fps);
+    Camera(const std::string& device, int width, int height);
     ~Camera();
     Camera(const Camera&) = delete;
     Camera& operator=(const Camera&) = delete;
@@ -23,7 +23,7 @@ private:
     void close() noexcept;
     void queue(unsigned index);
     int fd_ = -1;
-    bool streaming_ = false, full_ = true, bt709_ = false;
+    bool streaming_ = false;
     unsigned width_ = 0, height_ = 0, stride_ = 0;
     std::vector<Mapping> maps_;
 };

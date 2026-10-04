@@ -39,12 +39,14 @@ source = { virtual = "." }
 dependencies = [
     { name = "onnx" },
     { name = "ultralytics" },
+    { name = "unidic-lite" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "onnx", specifier = ">=1.23.0" },
     { name = "ultralytics", specifier = ">=8.4.161" },
+    { name = "unidic-lite", specifier = ">=1.0.8" },
 ]
 
 [[package]]
@@ -2307,6 +2309,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/45/20/d6b6aaa8ecf7dbdea
 wheels = [
     { url = "https://files.pythonhosted.org/packages/53/98/f1fa3d40d548c8a2a3eec33b7f856063bb6c7d51e16d5198b1f390b2c79d/ultralytics_thop-2.1.6-py3-none-any.whl", hash = "sha256:23f7b8ad124fa3432c1a7de9279102c4fdda699216032a7dff49f87ec3d1a3af", size = 30479, upload-time = "2026-07-30T22:31:26.874Z" },
 ]
+
+[[package]]
+name = "unidic-lite"
+version = "1.0.8"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/55/2b/8cf7514cb57d028abcef625afa847d60ff1ffbf0049c36b78faa7c35046f/unidic-lite-1.0.8.tar.gz", hash = "sha256:db9d4572d9fdd4d00a97949d4b0741ec480ee05a7e7e2e32f547500dae27b245", size = 47356746, upload-time = "2021-01-25T06:07:54.719Z" }
 
 [[package]]
 name = "urllib3"

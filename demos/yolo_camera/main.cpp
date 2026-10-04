@@ -59,7 +59,7 @@ int main() {
         cv::setNumThreads(2);
         demo::Detector detector(config::model_path);
         demo::Camera camera(config::camera_device, config::capture_width,
-                            config::capture_height, config::requested_fps);
+                            config::capture_height);
         cv::namedWindow(config::window_title, cv::WINDOW_NORMAL);
         cv::resizeWindow(config::window_title, config::window_width, config::window_height);
 
@@ -80,18 +80,11 @@ int main() {
             const double age = frame.age_ms < 0 ? -1 : frame.age_ms + elapsedMs(after_capture);
 
             std::ostringstream status;
-            status << std::fixed << std::setprecision(1) << "FPS " << fps
-                   << "  NPU " << timing.inference_ms << "ms  age " << age << "ms  objects " << count;
-            cv::putText(frame.bgr, status.str(), {8, 24}, cv::FONT_HERSHEY_SIMPLEX,
-                        0.5, cv::Scalar(0, 0, 0), 3);
-            cv::putText(frame.bgr, status.str(), {8, 24}, cv::FONT_HERSHEY_SIMPLEX,
-                        0.5, cv::Scalar(255, 255, 255), 1);
-            cv::imshow(config::window_title, frame.bgr);
             const int key = cv::waitKey(1) & 0xff;
-            // 板端 OpenCV 4.2 的 GTK 后端可能用 -1 表示不支持查询窗口可见性。
-            if (key == 'q' || key == 27 ||
-                (total_frames > 2 && cv::getWindowProperty(config::window_title, cv::WND_PROP_VISIBLE) == 0))
+            if (key == 'q' || key == 27) {
                 stopped = 1;
+            }
+            cv::imshow(config::window_title, frame.bgr);
 
             ++total_frames;
             ++interval_frames;

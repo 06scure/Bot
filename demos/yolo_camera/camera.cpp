@@ -1,5 +1,4 @@
 #include "camera.hpp"
-#include "core.hpp"
 #include <linux/videodev2.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
@@ -12,6 +11,7 @@
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
+#include <im2d.hpp>
 
 namespace demo {
 namespace {
@@ -26,7 +26,7 @@ void require(int rc, const char* what) {
 using Clock = std::chrono::steady_clock;
 double elapsed(Clock::time_point t) { return std::chrono::duration<double, std::milli>(Clock::now() - t).count(); }
 }
-Camera::Camera(const std::string& device, int width, int height, int fps) {
+Camera::Camera(const std::string& device, int width, int height) {
     try {
         fd_ = ::open(device.c_str(), O_RDWR | O_NONBLOCK | O_CLOEXEC);
         require(fd_, "Open camera (close Cheese first)");
@@ -50,25 +50,13 @@ Camera::Camera(const std::string& device, int width, int height, int fps) {
             throw std::runtime_error("Unsupported NV12 dimensions/stride");
         auto enc = p.ycbcr_enc;
         if (enc == V4L2_YCBCR_ENC_DEFAULT) enc = V4L2_MAP_YCBCR_ENC_DEFAULT(p.colorspace);
-        if (enc != V4L2_YCBCR_ENC_601 && enc != V4L2_YCBCR_ENC_709)
-            throw std::runtime_error("Only BT.601/709 NV12 is supported");
-        bt709_ = enc == V4L2_YCBCR_ENC_709;
         auto quant = p.quantization;
         if (quant == V4L2_QUANTIZATION_DEFAULT)
             quant = V4L2_MAP_QUANTIZATION_DEFAULT(false, p.colorspace, enc);
-        full_ = quant == V4L2_QUANTIZATION_FULL_RANGE;
+        if (enc != V4L2_YCBCR_ENC_601 || quant != V4L2_QUANTIZATION_FULL_RANGE)
+            throw std::runtime_error("Expected BT.601 full-range NV12");
         std::cout << "Camera: " << width_ << 'x' << height_ << " NV12 stride=" << stride_
-                  << " range=" << (full_ ? "full" : "limited") << " matrix=" << (bt709_ ? "709" : "601") << '\n';
-        v4l2_streamparm parm{};
-        parm.type = fmt.type;
-        if (call(fd_, VIDIOC_G_PARM, &parm) == 0 && (parm.parm.capture.capability & V4L2_CAP_TIMEPERFRAME)) {
-            parm.parm.capture.timeperframe = {1, static_cast<unsigned>(fps)};
-            if (call(fd_, VIDIOC_S_PARM, &parm) < 0) std::cerr << "Camera FPS request unsupported; retaining driver rate\n";
-            if (call(fd_, VIDIOC_G_PARM, &parm) == 0) {
-                auto t = parm.parm.capture.timeperframe;
-                std::cout << "Camera interval: " << t.numerator << '/' << t.denominator << " seconds\n";
-            }
-        } else std::cout << "Camera FPS control unavailable; retaining sensor rate\n";
+                  << " range=full matrix=601 (sensor frame rate)\n";
         v4l2_requestbuffers req{};
         req.count = 4; req.type = fmt.type; req.memory = V4L2_MEMORY_MMAP;
         require(call(fd_, VIDIOC_REQBUFS, &req), "VIDIOC_REQBUFS");
@@ -113,6 +101,7 @@ bool Camera::read(Frame& frame, const volatile std::sig_atomic_t& stop) {
     held.reserve(maps_.size());
     v4l2_buffer latest{};
     v4l2_plane latest_plane{};
+
     while (held.empty() && !stop) {
         pollfd pfd{fd_, POLLIN, 0};
         const int ready = poll(&pfd, 1, 200);
@@ -143,16 +132,47 @@ bool Camera::read(Frame& frame, const volatile std::sig_atomic_t& stop) {
         throw std::runtime_error("Short NV12 frame: bytesused/offset/stride disagree");
     frame.capture_ms = elapsed(start);
     const auto color_start = Clock::now();
-    const auto* y = static_cast<const uint8_t*>(mem.ptr) + latest_plane.data_offset;
-    const auto* uv = y + size_t(stride_) * height_;
     frame.bgr.create(height_, width_, CV_8UC3);
-    for (unsigned row = 0; row < height_; ++row) {
-        auto* dst = frame.bgr.ptr<cv::Vec3b>(row);
-        const auto* chroma = uv + size_t(row / 2) * stride_;
-        for (unsigned col = 0; col < width_; ++col) {
-            const auto c = yuvToBgr(y[size_t(row) * stride_ + col], chroma[col & ~1u], chroma[(col & ~1u) + 1], full_, bt709_);
-            dst[col] = {c.b, c.g, c.r};
-        }
+
+    auto* nv12 = static_cast<uint8_t*>(mem.ptr)
+        + latest_plane.data_offset;
+    const auto src = wrapbuffer_virtualaddr_t(
+        nv12,
+        width_,
+        height_,
+        stride_,height_,
+        RK_FORMAT_YCbCr_420_SP
+    );
+    const auto dst = wrapbuffer_virtualaddr_t(
+        frame.bgr.data,
+        frame.bgr.cols,
+        frame.bgr.rows,
+        static_cast<int>(frame.bgr.step / frame.bgr.elemSize()),
+        frame.bgr.rows,
+        RK_FORMAT_BGR_888
+    );
+    const IM_STATUS validation = imcheck(src, dst, {}, {});
+
+    if (validation != IM_STATUS_NOERROR) {
+        throw std::runtime_error(
+            std::string("RGA parameter check failed: ")
+            + imStrError(validation)
+        );
+    }
+
+    const IM_STATUS status = imcvtcolor(
+        src,
+        dst,
+        RK_FORMAT_YCbCr_420_SP,
+        RK_FORMAT_BGR_888,
+        IM_YUV_TO_RGB_BT601_FULL
+    );
+
+    if (status != IM_STATUS_SUCCESS) {
+        throw std::runtime_error(
+            std::string("RGA color conversion failed: ")
+            + imStrError(status)
+        );
     }
     frame.color_ms = elapsed(color_start);
     if ((latest.flags & V4L2_BUF_FLAG_TIMESTAMP_MASK) == V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC) {

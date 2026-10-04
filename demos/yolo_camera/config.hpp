@@ -6,7 +6,6 @@ inline constexpr char model_path[] = "model/yolo26n-rk3568-i8.rknn";
 inline constexpr char camera_device[] = "/dev/video0";
 inline constexpr int capture_width = 640;
 inline constexpr int capture_height = 480;
-inline constexpr int requested_fps = 30;  // 请求值；实际是否支持由摄像头驱动决定。
 inline constexpr float confidence_threshold = 0.25f;
 inline constexpr bool person_only = false;  // 只过滤显示结果，不减少 NPU 计算。
 

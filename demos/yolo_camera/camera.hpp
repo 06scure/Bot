@@ -25,6 +25,7 @@ private:
     int fd_ = -1;
     bool streaming_ = false;
     unsigned width_ = 0, height_ = 0, stride_ = 0;
+    size_t checked_bgr_step_ = 0;
     std::vector<Mapping> maps_;
 };
 }

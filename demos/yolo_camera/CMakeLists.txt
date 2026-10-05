@@ -28,10 +28,10 @@ target_include_directories(yolo_camera_demo PRIVATE
     "${THIRD_PARTY}/rknpu2/include"
     "${THIRD_PARTY}/lubancat_example/include"
     "${THIRD_PARTY}/librga/include"
+    ${OpenCV_INCLUDE_DIRS}
 )
 target_link_libraries(yolo_camera_demo PRIVATE rknn_runtime rga_runtime ${OpenCV_LIBS})
 target_compile_options(yolo_camera_demo PRIVATE -Wall -Wextra)
-
 set(_rpath
     "$ORIGIN/../3rdparty/rknpu2/lib"
     "$ORIGIN/../3rdparty/librga/lib"

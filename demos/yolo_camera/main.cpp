@@ -1,10 +1,10 @@
 #include "camera.hpp"
 #include "config.hpp"
 #include "detector.hpp"
+#include "time.hpp"
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <algorithm>
-#include <chrono>
 #include <csignal>
 #include <iomanip>
 #include <iostream>
@@ -13,10 +13,8 @@
 namespace {
 volatile std::sig_atomic_t stopped = 0;
 void signalStop(int) { stopped = 1; }
-using Clock = std::chrono::steady_clock;
-double elapsedMs(Clock::time_point start) {
-    return std::chrono::duration<double, std::milli>(Clock::now() - start).count();
-}
+using demo::time::Clock;
+using demo::time::elapsedMs;
 
 const char* names[] = {
     "person","bicycle","car","motorcycle","airplane","bus","train","truck","boat","traffic light",
@@ -64,27 +62,26 @@ int main() {
         cv::resizeWindow(config::window_title, config::window_width, config::window_height);
 
         auto interval_start = Clock::now();
-        int total_frames = 0;
+        unsigned total_frames = 0;
         int interval_frames = 0;
         double fps = 0;
         unsigned dropped_total = 0;
-
+        demo::Frame frame;  // create() 复用同尺寸内存，不能每轮析构 Frame。
         while (!stopped) {
             // 每次循环只有一条路径：取帧 → 推理 → 画框 → 显示。
-            demo::Frame frame;
             if (!camera.read(frame, stopped)) break;
             const auto after_capture = Clock::now();
             demo::Timing timing;
             const auto detections = detector.run(frame.bgr, config::confidence_threshold, timing);
             const int count = drawDetections(frame.bgr, detections);
-            const double age = frame.age_ms < 0 ? -1 : frame.age_ms + elapsedMs(after_capture);
 
-            std::ostringstream status;
+            cv::imshow(config::window_title, frame.bgr);
             const int key = cv::waitKey(1) & 0xff;
             if (key == 'q' || key == 27) {
                 stopped = 1;
             }
-            cv::imshow(config::window_title, frame.bgr);
+            // 提交并处理 GUI 事件后的帧龄，不等同于屏幕扫描显示时间。
+            const double age = frame.age_ms < 0 ? -1 : frame.age_ms + elapsedMs(after_capture);
 
             ++total_frames;
             ++interval_frames;

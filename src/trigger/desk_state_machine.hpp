@@ -44,7 +44,6 @@ struct DeskUpdate {
 const char* to_string(DeskState state) noexcept;
 
 // 纯逻辑模块：不访问设备、不睡眠、不创建线程，不读取系统墙上时间。
-// 当前仅实现初始化与状态查询，其余操作会明确抛出未实现错误。
 // 未来由 vision 线程独占；HTTP 通过 App 的同步快照读状态。
 class DeskStateMachine {
 public:
@@ -65,9 +64,14 @@ private:
     DeskStateMachineConfig config_;
     DeskState state_{DeskState::Absent};
 
-    // TODO: 实现规则后补充最小必要状态：连续命中帧数、缺席开始时间、
-    // 冷却截止时间、本次在场是否已产生到岗事件，以及上次更新时间。
-    // “是否在场”和“是否处于冷却”需分别保存，避免冷却到期导致在场重播。
+    void check_time(TimePoint now);
+    std::size_t consecutive_{0};
+    bool present_{false};
+    bool queued_{false};
+    bool queue_allowed_{false};
+    std::optional<TimePoint> absent_since_;
+    std::optional<TimePoint> cooldown_until_;
+    std::optional<TimePoint> last_update_;
 };
 
 }  // namespace bot

@@ -1,0 +1,42 @@
+Simple mixer control 'Playback Path',0
+  Capabilities: enum
+  Items: 'OFF' 'RCV' 'SPK' 'HP' 'HP_NO_MIC' 'BT' 'SPK_HP' 'RING_SPK' 'RING_HP' 'RING_HP_NO_MIC' 'RING_SPK_HP'
+  Item0: 'SPK'
+Simple mixer control 'Playback',0
+  Capabilities: volume
+  Playback channels: Front Left - Front Right
+  Capture channels: Front Left - Front Right
+  Limits: 0 - 252
+  Front Left: 177 [70%] [-29.51dB]
+  Front Right: 177 [70%] [-29.51dB]
+lexicon_ms=2387.29
+encoder_ms=427.681
+middle_ms=0.352039
+decoder_ms=11263.2
+waveform samples=94720 rms=0.0876971 peak=0.554199
+tts_cache_ready text=早上好，欢迎回来。
+Runtime=2.3.2 (429f97ae6b@2025-04-09T09:09:27) driver=0.8.2
+Output 0: [1,84,80,80] type=2 scale=0.0341894 zp=-109
+Output 1: [1,84,40,40] type=2 scale=0.0564584 zp=-126
+Output 2: [1,84,20,20] type=2 scale=0.0726882 zp=-128
+Camera: 640x480 NV12 stride=640 range=full matrix=601 (sensor frame rate)
+rga_api version 1.10.1_[0]
+frames=10 fps=9.57976 npu_ms=79.5409 people=0 state=ABSENT
+frames=21 fps=10.2983 npu_ms=67.202 people=0 state=ABSENT
+frames=32 fps=10.4601 npu_ms=84.3228 people=0 state=ABSENT
+frames=43 fps=10.1616 npu_ms=66.8526 people=0 state=ABSENT
+frames=53 fps=9.36078 npu_ms=74.2467 people=0 state=ABSENT
+frames=64 fps=9.97515 npu_ms=75.5471 people=0 state=ABSENT
+frames=75 fps=10.3062 npu_ms=66.8027 people=0 state=ABSENT
+frames=85 fps=9.76915 npu_ms=70.011 people=0 state=ABSENT
+frames=95 fps=9.97236 npu_ms=69.939 people=0 state=ABSENT
+frames=106 fps=10.0398 npu_ms=68.7207 people=0 state=ABSENT
+frames=117 fps=10.1738 npu_ms=67.8078 people=0 state=ABSENT
+frames=128 fps=10.2455 npu_ms=70.1793 people=0 state=ABSENT
+frames=139 fps=10.7295 npu_ms=64.6552 people=0 state=ABSENT
+frames=151 fps=11.2138 npu_ms=62.8947 people=0 state=ABSENT
+frames=163 fps=11.6156 npu_ms=63.8645 people=0 state=ABSENT
+frames=175 fps=11.4716 npu_ms=64.9072 people=0 state=ABSENT
+frames=187 fps=11.4058 npu_ms=62.7634 people=0 state=ABSENT
+frames=198 fps=10.3932 npu_ms=67.9626 people=0 state=ABSENT
+stopped frames=208 arrivals=0 greetings=0

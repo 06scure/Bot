@@ -1,0 +1,24 @@
+SYNTHETIC_DETECTION_REPLAY (not live camera acceptance)
+Simple mixer control 'Playback Path',0
+  Capabilities: enum
+  Items: 'OFF' 'RCV' 'SPK' 'HP' 'HP_NO_MIC' 'BT' 'SPK_HP' 'RING_SPK' 'RING_HP' 'RING_HP_NO_MIC' 'RING_SPK_HP'
+  Item0: 'SPK'
+Simple mixer control 'Playback',0
+  Capabilities: volume
+  Playback channels: Front Left - Front Right
+  Capture channels: Front Left - Front Right
+  Limits: 0 - 252
+  Front Left: 177 [70%] [-29.51dB]
+  Front Right: 177 [70%] [-29.51dB]
+lexicon_ms=2332.45
+encoder_ms=395.973
+middle_ms=0.34883
+decoder_ms=11002.9
+waveform samples=94720 rms=0.0876971 peak=0.554199
+playback_started queue_ms=0.268038
+Playing WAVE 'replay-test.wav' : Signed 16 bit Little Endian, Rate 44100 Hz, Mono
+playback_complete
+playback_started queue_ms=0.158956
+Playing WAVE 'replay-test.wav' : Signed 16 bit Little Endian, Rate 44100 Hz, Mono
+playback_complete
+PASS replay arrivals=3 greetings=2

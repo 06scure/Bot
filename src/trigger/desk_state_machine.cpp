@@ -2,38 +2,70 @@
 
 #include <stdexcept>
 #include <utility>
+#include <cmath>
+#include <algorithm>
 
 namespace bot {
 
 DeskStateMachine::DeskStateMachine(DeskStateMachineConfig config)
     : config_(std::move(config)) {
-    // TODO: 校验 ROI、分数、连续帧数和时间参数；非法值抛 invalid_argument。
-    // 在模块边界校验，确保未来测试或其他调用方绕过 JSON 也不会传入坏配置。
+    const auto& r=config_.roi;
+    if (!std::isfinite(r.left)||!std::isfinite(r.top)||!std::isfinite(r.right)||!std::isfinite(r.bottom)||
+        r.left<0||r.top<0||r.right>1||r.bottom>1||r.left>=r.right||r.top>=r.bottom||
+        !std::isfinite(config_.min_score)||config_.min_score<0||config_.min_score>1||
+        !config_.min_consecutive_frames||config_.absence_reset.count()<0||config_.cooldown.count()<0)
+        throw std::invalid_argument("invalid desk state machine configuration");
 }
 
 DeskState DeskStateMachine::state() const noexcept {
     return state_;
 }
 
-DeskUpdate DeskStateMachine::update(
-    const std::vector<Detection>& /*detections*/, TimePoint /*now*/) {
-    // TODO 1: 找出置信度达标且框中心在 ROI 内的人体；同帧多人只记一次命中。
-    // TODO 2: 累计连续命中帧；确认到岗前遇到不命中帧则清零。
-    // TODO 3: 达到阈值产生一次 ArrivalConfirmed，同次在场不得反复产生事件。
-    // TODO 4: 已确认在场后，连续缺席满 absence_reset 才产生 DepartureConfirmed。
-    // TODO 5: 离开可复位在场状态，但不得清除尚未结束的冷却期限。
-    // TODO 6: 到岗事件仅在非冷却时设置 greeting_allowed；冷却期间照常报告
-    //         到岗事实但不问候，冷却结束且人仍在场时也不主动补播。
-    // TODO 7: 拒绝倒退时间；明确 ROI 边界包含、时间阈值 >= 等边界规则。
-    // 硬件长时间中断后的重新确认策略需在 App 接入时明确，不能静默算作离开。
-    throw std::logic_error("DeskStateMachine::update is not implemented");
+void DeskStateMachine::check_time(TimePoint now) {
+    if(last_update_ && now<*last_update_) throw std::invalid_argument("time moved backwards");
+    last_update_=now;
 }
 
-void DeskStateMachine::mark_greeting_queued(TimePoint /*now*/) {
-    // TODO: 仅接受本次有效到岗的入队确认，记录冷却起点；拒绝重复确认。
-    // 队列满/技能未执行时不调用本方法，失败由 App 记录，本次到岗不自动重试。
-    // 手动 HTTP 问候的限流与自动到岗冷却是否共享，需在接入 HTTP 前明确。
-    throw std::logic_error("DeskStateMachine::mark_greeting_queued is not implemented");
+DeskUpdate DeskStateMachine::update(const std::vector<Detection>& detections, TimePoint now) {
+    check_time(now);
+    queue_allowed_=false;
+    const bool cooling=cooldown_until_ && now<*cooldown_until_;
+    const bool hit=std::any_of(detections.begin(),detections.end(),[&](const Detection& d) {
+        const auto& b=d.box; const auto& r=config_.roi;
+        if(!d.is_person||!std::isfinite(d.score)||d.score<config_.min_score||d.score>1||
+           !std::isfinite(b.left)||!std::isfinite(b.top)||!std::isfinite(b.right)||!std::isfinite(b.bottom)||
+           b.left<0||b.top<0||b.right>1||b.bottom>1||b.left>=b.right||b.top>=b.bottom) return false;
+        const auto x=(b.left+b.right)*.5f, y=(b.top+b.bottom)*.5f;
+        return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;
+    });
+    std::optional<DeskEvent> event;
+    if(hit) {
+        absent_since_.reset();
+        if(!present_ && ++consecutive_>=config_.min_consecutive_frames) {
+            present_=true; queued_=false;
+            event=DeskEvent::ArrivalConfirmed; queue_allowed_=!cooling;
+        }
+    } else {
+        consecutive_=0;
+        if(present_) {
+            if(!absent_since_) absent_since_=now;
+            if(now-*absent_since_>=config_.absence_reset) {
+                present_=false; queued_=false; absent_since_.reset();
+                event=DeskEvent::DepartureConfirmed;
+            }
+        }
+    }
+    state_=present_ ? (queued_ ? DeskState::Greeted : DeskState::Present)
+                    : (consecutive_ ? DeskState::PersonCandidate : cooling ? DeskState::Cooldown : DeskState::Absent);
+    return {state_,event,queue_allowed_};
+}
+
+void DeskStateMachine::mark_greeting_queued(TimePoint now) {
+    check_time(now);
+    if(!present_||queued_||!queue_allowed_) throw std::logic_error("no eligible arrival to acknowledge");
+    queued_=true; queue_allowed_=false;
+    cooldown_until_=now+config_.cooldown;
+    state_=DeskState::Greeted;
 }
 
 const char* to_string(DeskState state) noexcept {

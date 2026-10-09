@@ -1,0 +1,5 @@
+build/
+*.wav
+*.log
+model/*.onnx
+model/*.rknn

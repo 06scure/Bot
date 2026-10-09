@@ -1,0 +1,81 @@
+Simple mixer control 'Playback Path',0
+  Capabilities: enum
+  Items: 'OFF' 'RCV' 'SPK' 'HP' 'HP_NO_MIC' 'BT' 'SPK_HP' 'RING_SPK' 'RING_HP' 'RING_HP_NO_MIC' 'RING_SPK_HP'
+  Item0: 'SPK'
+Simple mixer control 'Playback',0
+  Capabilities: volume
+  Playback channels: Front Left - Front Right
+  Capture channels: Front Left - Front Right
+  Limits: 0 - 252
+  Front Left: 177 [70%] [-29.51dB]
+  Front Right: 177 [70%] [-29.51dB]
+lexicon_ms=2338.73
+encoder_ms=419.586
+middle_ms=0.424078
+decoder_ms=9771.18
+waveform samples=94720 rms=0.0876971 peak=0.554199
+tts_cache_ready text=早上好，欢迎回来。
+Runtime=2.3.2 (429f97ae6b@2025-04-09T09:09:27) driver=0.8.2
+Output 0: [1,84,80,80] type=2 scale=0.0341894 zp=-109
+Output 1: [1,84,40,40] type=2 scale=0.0564584 zp=-126
+Output 2: [1,84,20,20] type=2 scale=0.0726882 zp=-128
+Camera: 640x480 NV12 stride=640 range=full matrix=601 (sensor frame rate)
+rga_api version 1.10.1_[0]
+frames=11 fps=10.1465 npu_ms=76.0812 people=0 state=ABSENT
+frames=23 fps=11.8247 npu_ms=78.0853 people=0 state=ABSENT
+frames=35 fps=11.3413 npu_ms=79.879 people=0 state=ABSENT
+frames=47 fps=11.4788 npu_ms=78.2871 people=0 state=ABSENT
+frames=59 fps=11.7069 npu_ms=73.0559 people=0 state=ABSENT
+frames=71 fps=11.2997 npu_ms=79.6751 people=0 state=ABSENT
+frames=83 fps=11.5151 npu_ms=84.0968 people=0 state=ABSENT
+frames=95 fps=11.3303 npu_ms=76.6767 people=0 state=ABSENT
+frames=107 fps=11.388 npu_ms=76.8323 people=0 state=ABSENT
+frames=119 fps=11.5728 npu_ms=76.5578 people=0 state=ABSENT
+frames=131 fps=11.4502 npu_ms=84.7781 people=0 state=ABSENT
+frames=143 fps=11.4187 npu_ms=85.0914 people=0 state=ABSENT
+frames=155 fps=11.3001 npu_ms=84.2674 people=0 state=ABSENT
+frames=167 fps=11.718 npu_ms=68.8602 people=0 state=ABSENT
+frames=179 fps=11.3022 npu_ms=79.039 people=0 state=ABSENT
+frames=191 fps=11.3231 npu_ms=75.8829 people=0 state=ABSENT
+frames=203 fps=11.1998 npu_ms=84.7924 people=0 state=ABSENT
+frames=215 fps=11.3241 npu_ms=85.9349 people=0 state=ABSENT
+frames=227 fps=11.449 npu_ms=85.1065 people=0 state=ABSENT
+frames=239 fps=11.5043 npu_ms=69.7673 people=0 state=ABSENT
+frames=251 fps=11.1931 npu_ms=81.8595 people=0 state=ABSENT
+frames=263 fps=11.301 npu_ms=85.031 people=0 state=ABSENT
+frames=275 fps=11.3146 npu_ms=83.0632 people=0 state=ABSENT
+frames=289 fps=13.6749 npu_ms=64.5451 people=0 state=ABSENT
+frames=303 fps=13.503 npu_ms=76.604 people=0 state=ABSENT
+frames=315 fps=11.47 npu_ms=72.8318 people=0 state=ABSENT
+frames=327 fps=11.4496 npu_ms=78.7803 people=0 state=ABSENT
+frames=339 fps=11.6141 npu_ms=62.8756 people=0 state=ABSENT
+frames=353 fps=13.7325 npu_ms=72.6268 people=0 state=ABSENT
+frames=365 fps=11.2865 npu_ms=78.5683 people=0 state=ABSENT
+frames=377 fps=11.2849 npu_ms=79.3984 people=0 state=ABSENT
+frames=389 fps=11.4001 npu_ms=76.1668 people=0 state=ABSENT
+frames=401 fps=11.3992 npu_ms=76.6603 people=0 state=ABSENT
+frames=413 fps=11.2358 npu_ms=79.3652 people=0 state=ABSENT
+frames=425 fps=11.4467 npu_ms=76.8047 people=0 state=ABSENT
+frames=437 fps=11.7073 npu_ms=74.0239 people=0 state=ABSENT
+frames=449 fps=11.3761 npu_ms=79.6393 people=0 state=ABSENT
+frames=462 fps=12.039 npu_ms=84.8619 people=0 state=ABSENT
+frames=474 fps=11.5683 npu_ms=76.4584 people=0 state=ABSENT
+frames=486 fps=11.5189 npu_ms=74.4131 people=0 state=ABSENT
+frames=497 fps=10.9796 npu_ms=83.6685 people=0 state=ABSENT
+frames=509 fps=11.4677 npu_ms=79.0143 people=0 state=ABSENT
+frames=521 fps=10.9649 npu_ms=85.4805 people=0 state=ABSENT
+frames=533 fps=11.9968 npu_ms=69.0044 people=0 state=ABSENT
+frames=545 fps=11.6176 npu_ms=76.4246 people=0 state=ABSENT
+frames=556 fps=10.7529 npu_ms=76.752 people=0 state=ABSENT
+frames=568 fps=11.461 npu_ms=77.0339 people=0 state=ABSENT
+frames=580 fps=11.7143 npu_ms=73.1297 people=0 state=ABSENT
+frames=592 fps=11.615 npu_ms=76.3427 people=0 state=ABSENT
+frames=604 fps=11.385 npu_ms=80.0897 people=0 state=ABSENT
+frames=615 fps=10.5109 npu_ms=77.1515 people=0 state=ABSENT
+frames=627 fps=11.3253 npu_ms=79.98 people=0 state=ABSENT
+frames=639 fps=11.3662 npu_ms=78.9898 people=0 state=ABSENT
+frames=651 fps=11.4028 npu_ms=84.2429 people=0 state=ABSENT
+frames=663 fps=11.5407 npu_ms=68.8985 people=0 state=ABSENT
+frames=675 fps=11.5038 npu_ms=80.1264 people=0 state=ABSENT
+frames=687 fps=11.7285 npu_ms=76.641 people=0 state=ABSENT
+stopped frames=691 arrivals=0 greetings=0

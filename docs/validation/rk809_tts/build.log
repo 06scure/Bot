@@ -1,0 +1,22 @@
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /root/bot_demos/demos/greet_at_desk/build
+[ 25%] Built target desk_logic
+[ 31%] Built target speech
+Scanning dependencies of target greet_replay_test
+[ 50%] Building CXX object CMakeFiles/greet_replay_test.dir/replay_test.cpp.o
+[ 50%] Built target desk_state_test
+Scanning dependencies of target greet_at_desk_demo
+[ 56%] Building CXX object CMakeFiles/greet_at_desk_demo.dir/main.cpp.o
+[ 62%] Linking CXX executable greet_replay_test
+[ 62%] Built target greet_replay_test
+[ 75%] Built target rk809_tts_demo
+[ 81%] Linking CXX executable greet_at_desk_demo
+[100%] Built target greet_at_desk_demo
+Test project /root/bot_demos/demos/greet_at_desk/build
+    Start 1: desk_state_test
+1/1 Test #1: desk_state_test ..................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.01 sec

@@ -1,0 +1,13 @@
+Simple mixer control 'Playback Path',0
+  Capabilities: enum
+  Items: 'OFF' 'RCV' 'SPK' 'HP' 'HP_NO_MIC' 'BT' 'SPK_HP' 'RING_SPK' 'RING_HP' 'RING_HP_NO_MIC' 'RING_SPK_HP'
+  Item0: 'SPK'
+Simple mixer control 'Playback',0
+  Capabilities: volume
+  Playback channels: Front Left - Front Right
+  Capture channels: Front Left - Front Right
+  Limits: 0 - 252
+  Front Left: 177 [70%] [-29.51dB]
+  Front Right: 177 [70%] [-29.51dB]
+E RKNN: [23:56:18.902] rknn_init, load model failed!
+ERROR rknn_init error=-6

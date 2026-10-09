@@ -1,0 +1,51 @@
+{
+  "files": [
+    {
+      "sha256": "a74e9eadffff065c75eb6dfa040efa72cad23e72cfea70d39190bc174fb97093",
+      "path": "checkpoint.pth",
+      "bytes": 207770124
+    },
+    {
+      "sha256": "d58b5acdab89ad2bbd65325affab309ae3cb964834b02f9a60587474e81c8bb9",
+      "path": "demos/rk809_tts/model/config.json",
+      "bytes": 2296
+    },
+    {
+      "sha256": "be76fa98ab761477cfbe04fc0c7ccb66525c6611dd0917fbb023257b677066b1",
+      "path": "demos/rk809_tts/model/tokens.txt",
+      "bytes": 767
+    },
+    {
+      "sha256": "cac17d675ddb2ef9988b1a699bcaf57e0bb38ed9f3ec382132a5cdf3f879a72d",
+      "path": "demos/rk809_tts/model/lexicon.txt",
+      "bytes": 7085985
+    },
+    {
+      "sha256": "15d599801267c0d602fee13fcd30f4374ad7f17a0fbc5e43572217a3e1170121",
+      "path": "demos/rk809_tts/model/encoder.onnx",
+      "bytes": 33255897
+    },
+    {
+      "sha256": "1e20b60e3d89ac8356dd49ad37af7855af1b10100171af4a34668ce6c18e433a",
+      "path": "demos/rk809_tts/model/decoder.onnx",
+      "bytes": 147566787
+    },
+    {
+      "sha256": "45adc7a5a060c40795ba6a4dcfd1f8444674a8469bc16af8d675c3e26ee9ab7e",
+      "path": "demos/rk809_tts/model/encoder.rknn",
+      "bytes": 23546726
+    },
+    {
+      "sha256": "91734e39960b72fa8bc3777690ea65d188594428c14eff81dd8e0a09e95d459e",
+      "path": "demos/rk809_tts/model/decoder.rknn",
+      "bytes": 111051287
+    }
+  ],
+  "precision": "FP16",
+  "target": "rk3568",
+  "exporter_commit": "711e65f8253df7138c53261aa6aad04ae539c282",
+  "onnxsim": "0.4.36",
+  "onnx": "1.17.0",
+  "torch": "2.4.0+cpu",
+  "toolkit": "2.3.2"
+}
